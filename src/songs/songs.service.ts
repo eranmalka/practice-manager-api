@@ -1,11 +1,17 @@
 import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class SongsService {
-  getSongs() {
-    return [
-      { id: 1, name: 'Little Wing', artist: 'Jimi Hendrix' },
-      { id: 2, name: 'Under the Bridge', artist: 'RHCP' },
-    ];
+  constructor(private prisma: PrismaService) {}
+
+  findAll() {
+    return this.prisma.song.findMany();
+  }
+
+  create(data: { name: string; artist: string }) {
+    return this.prisma.song.create({
+      data,
+    });
   }
 }

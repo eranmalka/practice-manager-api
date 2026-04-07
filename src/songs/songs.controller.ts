@@ -1,17 +1,17 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Post, Body } from '@nestjs/common';
 import { SongsService } from './songs.service';
 
 @Controller('songs')
 export class SongsController {
-  constructor(private readonly songsService: SongsService) {}
+  constructor(private songsService: SongsService) {}
 
   @Get()
-  getAllSongs() {
-    return this.songsService.getSongs();
+  getAll() {
+    return this.songsService.findAll();
   }
 
-  @Get(':id')
-  getSongById() {
-    return { id: 1, name: 'Little Wing' };
+  @Post()
+  create(@Body() body: { name: string; artist: string }) {
+    return this.songsService.create(body);
   }
 }
