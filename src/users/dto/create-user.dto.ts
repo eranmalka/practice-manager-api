@@ -7,4 +7,8 @@ export class CreateUserDto {
   @IsString()
   @MinLength(2)
   name: string;
+
+  @IsString()
+  @MinLength(8, { message: 'password must be at least 8 characters' })
+  password: string;
 }
