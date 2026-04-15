@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateSongDto } from './dto/create-song.dto';
+import { UpdateSongDto } from './dto/update-song.dto';
 
 @Injectable()
 export class SongsService {
@@ -29,6 +30,21 @@ export class SongsService {
         ...dto,
         userId,
       },
+    });
+  }
+
+  async update(id: number, dto: UpdateSongDto, userId: number) {
+    await this.findOne(id, userId);
+    return this.prisma.song.update({
+      where: { id },
+      data: dto,
+    });
+  }
+
+  async remove(id: number, userId: number) {
+    await this.findOne(id, userId);
+    return this.prisma.song.delete({
+      where: { id },
     });
   }
 }

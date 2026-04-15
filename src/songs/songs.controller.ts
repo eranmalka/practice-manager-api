@@ -1,6 +1,8 @@
 import {
   Body,
   Controller,
+  Delete,
+  Patch,
   Get,
   Param,
   ParseIntPipe,
@@ -12,6 +14,7 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Request } from 'express';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
+import { UpdateSongDto } from './dto/update-song.dto';
 
 @Controller('songs')
 @UseGuards(AuthGuard('jwt'))
@@ -37,5 +40,22 @@ export class SongsController {
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.songsService.findOne(id, req.user.id);
+  }
+
+  @Patch(':id')
+  update(
+    @Req() req: Request & { user: { id: number } },
+    @Param('id', ParseIntPipe) id: number,
+    @Body() dto: UpdateSongDto,
+  ) {
+    return this.songsService.update(id, dto, req.user.id);
+  }
+
+  @Delete(':id')
+  remove(
+    @Req() req: Request & { user: { id: number } },
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.songsService.remove(id, req.user.id);
   }
 }
