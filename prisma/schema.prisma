@@ -9,9 +9,21 @@ generator client {
 }
 
 model Song {
-  id     Int    @id @default(autoincrement())
-  name   String
-  artist String
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  title     String
+  artist    String?
+  composer  String?
+  key       String?
+  bpm       Int?
+  genre     String?
+  difficulty String?
+  status    String   @default("want_to_learn")
+  lyrics    String?
+  notes     String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model User {
@@ -20,4 +32,5 @@ model User {
   name         String
   passwordHash String?
   createdAt    DateTime @default(now())
+  songs Song[]
 }
