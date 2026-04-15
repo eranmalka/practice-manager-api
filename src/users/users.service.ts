@@ -65,4 +65,38 @@ export class UsersService {
     }
     return user;
   }
+
+  /** For login: loads hash, verifies password, returns public user fields or null. */
+  async validateCredentials(
+    email: string,
+    plainPassword: string,
+  ): Promise<{
+    id: number;
+    email: string;
+    name: string;
+    createdAt: Date;
+  } | null> {
+    const user = await this.prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+        createdAt: true,
+        passwordHash: true,
+      },
+    });
+    if (!user?.passwordHash) {
+      return null;
+    }
+    if (!bcrypt.compareSync(plainPassword, user.passwordHash)) {
+      return null;
+    }
+    return {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+      createdAt: user.createdAt,
+    };
+  }
 }
