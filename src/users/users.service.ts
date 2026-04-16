@@ -8,6 +8,7 @@ import { Prisma } from '@prisma/client';
 import bcrypt from 'bcryptjs';
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 
 const publicUserSelect = {
   id: true,
@@ -64,6 +65,23 @@ export class UsersService {
       throw new NotFoundException(`User #${id} not found`);
     }
     return user;
+  }
+
+  async updateProfile(id: number, dto: UpdateUserDto) {
+    const data: { name?: string; passwordHash?: string } = {};
+
+    if (dto.name) {
+      data.name = dto.name;
+    }
+    if (dto.password) {
+      data.passwordHash = bcrypt.hashSync(dto.password, 10);
+    }
+
+    return this.prisma.user.update({
+      where: { id },
+      data,
+      select: publicUserSelect,
+    });
   }
 
   /** For login: loads hash, verifies password, returns public user fields or null. */

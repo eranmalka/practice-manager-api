@@ -4,6 +4,7 @@ import {
   Get,
   Param,
   ParseIntPipe,
+  Patch,
   Post,
   Req,
   UseGuards,
@@ -11,6 +12,7 @@ import {
 import { AuthGuard } from '@nestjs/passport';
 import type { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
+import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
 
 @Controller('users')
@@ -30,7 +32,16 @@ export class UsersController {
   @Get('me')
   @UseGuards(AuthGuard('jwt'))
   getProfile(@Req() req: Request & { user: { id: number; email: string } }) {
-    return req.user;
+    return this.usersService.findOne(req.user.id);
+  }
+
+  @Patch('me')
+  @UseGuards(AuthGuard('jwt'))
+  updateProfile(
+    @Req() req: Request & { user: { id: number } },
+    @Body() dto: UpdateUserDto,
+  ) {
+    return this.usersService.updateProfile(req.user.id, dto);
   }
 
   @Get(':id')
