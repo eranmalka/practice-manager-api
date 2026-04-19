@@ -7,6 +7,7 @@ import {
   Param,
   ParseIntPipe,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -14,6 +15,7 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Request } from 'express';
 import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
+import { FilterSongsDto } from './dto/filter-songs.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
 
 @Controller('songs')
@@ -22,8 +24,11 @@ export class SongsController {
   constructor(private readonly songsService: SongsService) {}
 
   @Get()
-  findAll(@Req() req: Request & { user: { id: number } }) {
-    return this.songsService.findAllByUser(req.user.id);
+  findAll(
+    @Req() req: Request & { user: { id: number } },
+    @Query() filters: FilterSongsDto,
+  ) {
+    return this.songsService.findAllByUser(req.user.id, filters);
   }
 
   @Post()
