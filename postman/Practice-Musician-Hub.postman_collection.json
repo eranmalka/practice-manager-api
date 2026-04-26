@@ -36,7 +36,7 @@
             "auth": { "type": "noauth" },
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"email\": \"eran@example.com\",\n  \"name\": \"Eran\",\n  \"password\": \"12345678\"\n}",
+              "raw": "{\n  \"email\": \"eran@example.com\",\n  \"name\": \"Eran\",\n  \"password\": \"12345678\",\n  \"instrument\": \"Guitar\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
@@ -103,7 +103,7 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"name\": \"Eran Malka\"\n}",
+              "raw": "{\n  \"name\": \"Eran Malka\",\n  \"instrument\": \"Piano\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {

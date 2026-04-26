@@ -14,6 +14,7 @@ const publicUserSelect = {
   id: true,
   email: true,
   name: true,
+  instrument: true,
   createdAt: true,
 } as const;
 
@@ -37,6 +38,7 @@ export class UsersService {
         data: {
           email: dto.email,
           name: dto.name,
+          instrument: dto.instrument,
           passwordHash,
         },
         select: publicUserSelect,
@@ -68,10 +70,14 @@ export class UsersService {
   }
 
   async updateProfile(id: number, dto: UpdateUserDto) {
-    const data: { name?: string; passwordHash?: string } = {};
+    const data: { name?: string; instrument?: string; passwordHash?: string } =
+      {};
 
     if (dto.name) {
       data.name = dto.name;
+    }
+    if (dto.instrument !== undefined) {
+      data.instrument = dto.instrument;
     }
     if (dto.password) {
       data.passwordHash = bcrypt.hashSync(dto.password, 10);
@@ -92,15 +98,13 @@ export class UsersService {
     id: number;
     email: string;
     name: string;
+    instrument: string | null;
     createdAt: Date;
   } | null> {
     const user = await this.prisma.user.findUnique({
       where: { email },
       select: {
-        id: true,
-        email: true,
-        name: true,
-        createdAt: true,
+        ...publicUserSelect,
         passwordHash: true,
       },
     });
@@ -110,11 +114,7 @@ export class UsersService {
     if (!bcrypt.compareSync(plainPassword, user.passwordHash)) {
       return null;
     }
-    return {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      createdAt: user.createdAt,
-    };
+    const { passwordHash: _, ...publicUser } = user;
+    return publicUser;
   }
 }
