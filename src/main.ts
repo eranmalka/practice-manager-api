@@ -10,8 +10,11 @@ console.log('DATABASE_URL:', process.env.DATABASE_URL);
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const corsOrigins = process.env.CORS_ORIGIN
+    ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim())
+    : ['http://localhost:4200'];
   app.enableCors({
-    origin: 'http://localhost:4200',
+    origin: corsOrigins,
   });
 
   app.useGlobalPipes(

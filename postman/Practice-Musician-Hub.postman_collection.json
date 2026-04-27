@@ -142,6 +142,28 @@
       ]
     },
     {
+      "name": "Music",
+      "item": [
+        {
+          "name": "Search (MusicBrainz)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "auth": { "type": "noauth" },
+            "url": {
+              "raw": "{{base_url}}/music/search?title=Human%20Nature&artist=Michael%20Jackson",
+              "host": ["{{base_url}}"],
+              "path": ["music", "search"],
+              "query": [
+                { "key": "title", "value": "Human Nature" },
+                { "key": "artist", "value": "Michael Jackson" }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
       "name": "Songs",
       "item": [
         {
