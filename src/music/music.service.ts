@@ -118,7 +118,7 @@ export class MusicService {
         title: r.title ?? '',
         artist: artistFromRecording(r),
         releaseYear: year,
-        sheetMusicUrl: null as const,
+        sheetMusicUrl: null,
       };
     });
 
