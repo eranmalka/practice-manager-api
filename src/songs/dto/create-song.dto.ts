@@ -1,43 +1,58 @@
-import { IsInt, IsOptional, IsString, Min } from 'class-validator';
+import { ChordChartFormat, SongStatus } from '@prisma/client';
+import { Transform } from 'class-transformer';
+import {
+  IsEnum,
+  IsIn,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MaxLength,
+} from 'class-validator';
+import { CHROMATIC_KEYS } from '../chromatic-keys';
+
+/** 2MB cap for paste tabs / ChordPro text */
+const CHORD_CHART_MAX = 2 * 1024 * 1024;
 
 export class CreateSongDto {
+  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
   @IsString()
+  @IsNotEmpty()
+  @MaxLength(500)
   title: string;
 
+  @IsOptional()
   @IsString()
-  @IsOptional()
-  artist?: string;
+  @MaxLength(500)
+  artist?: string | null;
 
+  @IsEnum(SongStatus)
+  status: SongStatus;
+
+  @IsOptional()
   @IsString()
-  @IsOptional()
-  composer?: string;
+  @MaxLength(2000)
+  musicBrainzRecordingId?: string | null;
 
+  @IsOptional()
   @IsString()
-  @IsOptional()
-  key?: string;
+  @MaxLength(2000)
+  sheetMusicUrl?: string | null;
 
-  @IsInt()
-  @Min(1)
   @IsOptional()
-  bpm?: number;
-
   @IsString()
-  @IsOptional()
-  genre?: string;
+  @MaxLength(2000)
+  backingTrackUrl?: string | null;
 
-  @IsString()
   @IsOptional()
-  difficulty?: string;
+  @IsString()
+  @MaxLength(CHORD_CHART_MAX)
+  chordChartRaw?: string | null;
 
-  @IsString()
   @IsOptional()
-  status?: string;
+  @IsEnum(ChordChartFormat)
+  chordChartFormat?: ChordChartFormat | null;
 
-  @IsString()
   @IsOptional()
-  lyrics?: string;
-
-  @IsString()
-  @IsOptional()
-  notes?: string;
+  @IsIn([...CHROMATIC_KEYS] as string[])
+  chordChartKey?: string | null;
 }

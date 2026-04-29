@@ -8,22 +8,36 @@ generator client {
   provider = "prisma-client-js"
 }
 
+enum SongStatus {
+  want_to_learn
+  learning
+  in_rotation
+  performance_ready
+}
+
+enum ChordChartFormat {
+  chordpro
+  ireal
+  plain
+}
+
 model Song {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  user      User     @relation(fields: [userId], references: [id])
-  title     String
-  artist    String?
-  composer  String?
-  key       String?
-  bpm       Int?
-  genre     String?
-  difficulty String?
-  status    String   @default("want_to_learn")
-  lyrics    String?
-  notes     String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id                     String   @id @default(uuid())
+  userId                 Int
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title                  String
+  artist                 String?
+  status                 SongStatus @default(want_to_learn)
+  backingTrackUrl        String?
+  musicBrainzRecordingId String?
+  sheetMusicUrl          String?
+  chordChartRaw          String?  @db.Text
+  chordChartFormat      ChordChartFormat?
+  chordChartKey         String?
+  createdAt              DateTime @default(now())
+  updatedAt              DateTime @updatedAt
+
+  @@index([userId])
 }
 
 model User {

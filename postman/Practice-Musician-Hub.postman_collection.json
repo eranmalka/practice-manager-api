@@ -12,6 +12,12 @@
     {
       "key": "token",
       "value": ""
+    },
+    {
+      "key": "song_id",
+      "value": "",
+      "type": "string",
+      "description": "UUID from Create song response (paste here for Get/Update/Delete by id)"
     }
   ],
   "auth": {
@@ -164,7 +170,7 @@
       ]
     },
     {
-      "name": "Songs",
+      "name": "Repertoire",
       "item": [
         {
           "name": "Get all my songs",
@@ -172,9 +178,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/songs",
+              "raw": "{{base_url}}/repertoire/songs",
               "host": ["{{base_url}}"],
-              "path": ["songs"]
+              "path": ["repertoire", "songs"]
             }
           }
         },
@@ -184,9 +190,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/songs/1",
+              "raw": "{{base_url}}/repertoire/songs/{{song_id}}",
               "host": ["{{base_url}}"],
-              "path": ["songs", "1"]
+              "path": ["repertoire", "songs", "{{song_id}}"]
             }
           }
         },
@@ -197,13 +203,13 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"title\": \"Autumn Leaves\",\n  \"artist\": \"Joseph Kosma\",\n  \"key\": \"Gm\",\n  \"bpm\": 120,\n  \"genre\": \"Jazz\",\n  \"difficulty\": \"intermediate\",\n  \"status\": \"want_to_learn\"\n}",
+              "raw": "{\n  \"title\": \"Autumn Leaves\",\n  \"artist\": \"Joseph Kosma\",\n  \"status\": \"want_to_learn\",\n  \"musicBrainzRecordingId\": null,\n  \"sheetMusicUrl\": null,\n  \"backingTrackUrl\": null,\n  \"chordChartRaw\": null,\n  \"chordChartFormat\": null,\n  \"chordChartKey\": \"G\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "{{base_url}}/songs",
+              "raw": "{{base_url}}/repertoire/songs",
               "host": ["{{base_url}}"],
-              "path": ["songs"]
+              "path": ["repertoire", "songs"]
             }
           }
         },
@@ -214,13 +220,13 @@
             "header": [],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"status\": \"in_progress\",\n  \"bpm\": 130,\n  \"notes\": \"Focus on the bridge section\"\n}",
+              "raw": "{\n  \"status\": \"learning\",\n  \"chordChartRaw\": \"[C] Autumn [Am] leaves\",\n  \"chordChartFormat\": \"plain\",\n  \"chordChartKey\": \"G\"\n}",
               "options": { "raw": { "language": "json" } }
             },
             "url": {
-              "raw": "{{base_url}}/songs/1",
+              "raw": "{{base_url}}/repertoire/songs/{{song_id}}",
               "host": ["{{base_url}}"],
-              "path": ["songs", "1"]
+              "path": ["repertoire", "songs", "{{song_id}}"]
             }
           }
         },
@@ -230,9 +236,9 @@
             "method": "DELETE",
             "header": [],
             "url": {
-              "raw": "{{base_url}}/songs/1",
+              "raw": "{{base_url}}/repertoire/songs/{{song_id}}",
               "host": ["{{base_url}}"],
-              "path": ["songs", "1"]
+              "path": ["repertoire", "songs", "{{song_id}}"]
             }
           }
         }

@@ -1,13 +1,10 @@
-import { IsOptional, IsString } from 'class-validator';
+import { SongStatus } from '@prisma/client';
+import { IsEnum, IsOptional, IsString } from 'class-validator';
 
 export class FilterSongsDto {
-  @IsString()
+  @IsEnum(SongStatus)
   @IsOptional()
-  status?: string;
-
-  @IsString()
-  @IsOptional()
-  genre?: string;
+  status?: SongStatus;
 
   @IsString()
   @IsOptional()

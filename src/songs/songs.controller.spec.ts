@@ -12,8 +12,11 @@ describe('SongsController', () => {
         {
           provide: SongsService,
           useValue: {
-            findAll: jest.fn(),
+            findAllByUser: jest.fn(),
+            findOne: jest.fn(),
             create: jest.fn(),
+            update: jest.fn(),
+            remove: jest.fn(),
           } satisfies Partial<SongsService>,
         },
       ],

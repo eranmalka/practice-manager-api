@@ -2,10 +2,12 @@ import {
   Body,
   Controller,
   Delete,
-  Patch,
   Get,
+  HttpCode,
+  HttpStatus,
   Param,
-  ParseIntPipe,
+  ParseUUIDPipe,
+  Patch,
   Post,
   Query,
   Req,
@@ -13,12 +15,12 @@ import {
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import type { Request } from 'express';
-import { SongsService } from './songs.service';
 import { CreateSongDto } from './dto/create-song.dto';
 import { FilterSongsDto } from './dto/filter-songs.dto';
 import { UpdateSongDto } from './dto/update-song.dto';
+import { SongsService } from './songs.service';
 
-@Controller('songs')
+@Controller('repertoire/songs')
 @UseGuards(AuthGuard('jwt'))
 export class SongsController {
   constructor(private readonly songsService: SongsService) {}
@@ -32,6 +34,7 @@ export class SongsController {
   }
 
   @Post()
+  @HttpCode(HttpStatus.CREATED)
   create(
     @Req() req: Request & { user: { id: number } },
     @Body() dto: CreateSongDto,
@@ -42,7 +45,7 @@ export class SongsController {
   @Get(':id')
   findOne(
     @Req() req: Request & { user: { id: number } },
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.songsService.findOne(id, req.user.id);
   }
@@ -50,16 +53,17 @@ export class SongsController {
   @Patch(':id')
   update(
     @Req() req: Request & { user: { id: number } },
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateSongDto,
   ) {
     return this.songsService.update(id, dto, req.user.id);
   }
 
   @Delete(':id')
+  @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @Req() req: Request & { user: { id: number } },
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this.songsService.remove(id, req.user.id);
   }
