@@ -9,12 +9,13 @@ import {
   MaxLength,
 } from 'class-validator';
 import { CHROMATIC_KEYS } from '../chromatic-keys';
+import { trimIfString } from './transform-utils';
 
 /** 2MB cap for paste tabs / ChordPro text */
 const CHORD_CHART_MAX = 2 * 1024 * 1024;
 
 export class CreateSongDto {
-  @Transform(({ value }) => (typeof value === 'string' ? value.trim() : value))
+  @Transform(trimIfString)
   @IsString()
   @IsNotEmpty()
   @MaxLength(500)

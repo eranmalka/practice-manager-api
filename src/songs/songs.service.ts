@@ -47,7 +47,8 @@ export class SongsService {
         backingTrackUrl: dto.backingTrackUrl ?? null,
         chordChartRaw: dto.chordChartRaw ?? null,
         chordChartFormat: dto.chordChartFormat ?? null,
-        chordChartKey: dto.chordChartKey === undefined ? 'C' : dto.chordChartKey,
+        chordChartKey:
+          dto.chordChartKey === undefined ? 'C' : dto.chordChartKey,
       },
     });
   }
