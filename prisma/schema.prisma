@@ -46,6 +46,8 @@ model User {
   name         String
   instrument   String?
   passwordHash String?
+  googleId     String?  @unique
+  facebookId   String?  @unique
   createdAt    DateTime @default(now())
   songs        Song[]
 }

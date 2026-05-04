@@ -101,8 +101,8 @@ export class UsersService {
     instrument: string | null;
     createdAt: Date;
   } | null> {
-    const user = await this.prisma.user.findUnique({
-      where: { email },
+    const user = await this.prisma.user.findFirst({
+      where: { email: { equals: email, mode: 'insensitive' } },
       select: {
         ...publicUserSelect,
         passwordHash: true,
@@ -116,5 +116,61 @@ export class UsersService {
     }
     const { passwordHash: _, ...publicUser } = user;
     return publicUser;
+  }
+
+  /** Link OAuth provider to existing user or create new user (password optional). */
+  async findOrCreateOAuthUser(
+    provider: 'google' | 'facebook',
+    providerId: string,
+    email: string,
+    name: string,
+  ): Promise<{ id: number; email: string }> {
+    const normalizedEmail = email.trim().toLowerCase();
+    const displayName =
+      name.trim() || normalizedEmail.split('@')[0] || 'Musician';
+
+    if (provider === 'google') {
+      const byGoogle = await this.prisma.user.findFirst({
+        where: { googleId: providerId },
+        select: { id: true, email: true },
+      });
+      if (byGoogle) {
+        return byGoogle;
+      }
+    } else {
+      const byFb = await this.prisma.user.findFirst({
+        where: { facebookId: providerId },
+        select: { id: true, email: true },
+      });
+      if (byFb) {
+        return byFb;
+      }
+    }
+
+    const byEmail = await this.prisma.user.findFirst({
+      where: { email: { equals: normalizedEmail, mode: 'insensitive' } },
+    });
+    if (byEmail) {
+      return this.prisma.user.update({
+        where: { id: byEmail.id },
+        data:
+          provider === 'google'
+            ? { googleId: providerId }
+            : { facebookId: providerId },
+        select: { id: true, email: true },
+      });
+    }
+
+    return this.prisma.user.create({
+      data: {
+        email: normalizedEmail,
+        name: displayName,
+        googleId: provider === 'google' ? providerId : null,
+        facebookId: provider === 'facebook' ? providerId : null,
+        passwordHash: null,
+        instrument: null,
+      },
+      select: { id: true, email: true },
+    });
   }
 }

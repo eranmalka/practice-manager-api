@@ -18,6 +18,11 @@ export class AuthService {
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
+    return this.issueAccessToken({ id: user.id, email: user.email });
+  }
+
+  /** Same JWT shape as email/password login (for OAuth callbacks). */
+  async issueAccessToken(user: { id: number; email: string }) {
     const payload = { sub: user.id, email: user.email };
     return {
       access_token: await this.jwtService.signAsync(payload),
