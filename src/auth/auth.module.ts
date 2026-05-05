@@ -7,6 +7,7 @@ import { AuthService } from './auth.service';
 import { FacebookStrategy } from './facebook.strategy';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
+import { OAuthCodeCallbackPreflightGuard } from './oauth-callback-preflight.guard';
 import {
   FacebookOAuthCallbackGuard,
   FacebookOAuthInitGuard,
@@ -33,6 +34,7 @@ import {
     GoogleOAuthCallbackGuard,
     FacebookOAuthInitGuard,
     FacebookOAuthCallbackGuard,
+    OAuthCodeCallbackPreflightGuard,
   ],
 })
 export class AuthModule {}

@@ -12,12 +12,17 @@ import {
 import type { Request, Response } from 'express';
 import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
+import { OAuthCodeCallbackPreflightGuard } from './oauth-callback-preflight.guard';
 import {
   FacebookOAuthCallbackGuard,
   FacebookOAuthInitGuard,
   GoogleOAuthCallbackGuard,
   GoogleOAuthInitGuard,
 } from './oauth.guards';
+import {
+  buildOAuthSuccessRedirect,
+  frontendBaseUrl,
+} from './oauth-redirect.util';
 
 @Controller('auth')
 export class AuthController {
@@ -36,14 +41,13 @@ export class AuthController {
   }
 
   @Get('google/callback')
-  @UseGuards(GoogleOAuthCallbackGuard)
+  @UseGuards(OAuthCodeCallbackPreflightGuard, GoogleOAuthCallbackGuard)
   async googleCallback(
     @Req() req: Request & { user: { id: number; email: string } },
     @Res() res: Response,
   ): Promise<void> {
     const { access_token } = await this.authService.issueAccessToken(req.user);
-    const base = process.env.FRONTEND_URL ?? 'http://localhost:4200';
-    const url = `${base}/auth/callback#access_token=${encodeURIComponent(access_token)}`;
+    const url = buildOAuthSuccessRedirect(frontendBaseUrl(), access_token);
     res.redirect(302, url);
   }
 
@@ -54,14 +58,13 @@ export class AuthController {
   }
 
   @Get('facebook/callback')
-  @UseGuards(FacebookOAuthCallbackGuard)
+  @UseGuards(OAuthCodeCallbackPreflightGuard, FacebookOAuthCallbackGuard)
   async facebookCallback(
     @Req() req: Request & { user: { id: number; email: string } },
     @Res() res: Response,
   ): Promise<void> {
     const { access_token } = await this.authService.issueAccessToken(req.user);
-    const base = process.env.FRONTEND_URL ?? 'http://localhost:4200';
-    const url = `${base}/auth/callback#access_token=${encodeURIComponent(access_token)}`;
+    const url = buildOAuthSuccessRedirect(frontendBaseUrl(), access_token);
     res.redirect(302, url);
   }
 }

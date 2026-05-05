@@ -2,16 +2,18 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Profile, Strategy } from 'passport-facebook';
 import { UsersService } from '../users/users.service';
+import { facebookOAuthCallbackUrl } from './oauth-redirect.util';
+
+/** Passport throws if clientID is empty; use placeholder when OAuth is not configured (app can still boot). */
+const FACEBOOK_OAUTH_PLACEHOLDER = '__facebook_oauth_not_configured__';
 
 @Injectable()
 export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   constructor(private readonly usersService: UsersService) {
     super({
-      clientID: process.env.FACEBOOK_APP_ID ?? '',
-      clientSecret: process.env.FACEBOOK_APP_SECRET ?? '',
-      callbackURL:
-        process.env.FACEBOOK_CALLBACK_URL ??
-        'http://localhost:3000/auth/facebook/callback',
+      clientID: process.env.FACEBOOK_APP_ID || FACEBOOK_OAUTH_PLACEHOLDER,
+      clientSecret: process.env.FACEBOOK_APP_SECRET || FACEBOOK_OAUTH_PLACEHOLDER,
+      callbackURL: facebookOAuthCallbackUrl(),
       profileFields: ['id', 'displayName', 'emails'],
       enableProof: true,
     });
