@@ -12,7 +12,8 @@ export class FacebookStrategy extends PassportStrategy(Strategy, 'facebook') {
   constructor(private readonly usersService: UsersService) {
     super({
       clientID: process.env.FACEBOOK_APP_ID || FACEBOOK_OAUTH_PLACEHOLDER,
-      clientSecret: process.env.FACEBOOK_APP_SECRET || FACEBOOK_OAUTH_PLACEHOLDER,
+      clientSecret:
+        process.env.FACEBOOK_APP_SECRET || FACEBOOK_OAUTH_PLACEHOLDER,
       callbackURL: facebookOAuthCallbackUrl(),
       profileFields: ['id', 'displayName', 'emails'],
       enableProof: true,

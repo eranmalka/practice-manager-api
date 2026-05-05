@@ -3,7 +3,10 @@ import { AuthGuard } from '@nestjs/passport';
 import type { Response } from 'express';
 import type { AuthenticateOptions } from 'passport';
 
-import { buildOAuthFailureRedirect, frontendBaseUrl } from './oauth-redirect.util';
+import {
+  buildOAuthFailureRedirect,
+  frontendBaseUrl,
+} from './oauth-redirect.util';
 
 @Injectable()
 export class GoogleOAuthInitGuard extends AuthGuard('google') {

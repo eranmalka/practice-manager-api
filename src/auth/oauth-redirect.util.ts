@@ -2,7 +2,10 @@
  * Builds SPA URL after successful OAuth. Query form matches the SPA contract
  * (see project docs): `access_token` or optional `token` synonym on the client.
  */
-export function buildOAuthSuccessRedirect(frontendBase: string, jwt: string): string {
+export function buildOAuthSuccessRedirect(
+  frontendBase: string,
+  jwt: string,
+): string {
   const base = frontendBase.replace(/\/$/, '');
   const token = encodeURIComponent(jwt);
   return `${base}/auth/callback?access_token=${token}`;
@@ -39,7 +42,6 @@ export function googleOAuthCallbackUrl(): string {
 
 export function facebookOAuthCallbackUrl(): string {
   return normalizeOAuthCallbackUrl(
-    process.env.FACEBOOK_CALLBACK_URL?.trim() ||
-      DEFAULT_FACEBOOK_CALLBACK_URL,
+    process.env.FACEBOOK_CALLBACK_URL?.trim() || DEFAULT_FACEBOOK_CALLBACK_URL,
   );
 }

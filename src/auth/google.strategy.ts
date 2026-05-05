@@ -12,7 +12,8 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
   constructor(private readonly usersService: UsersService) {
     super({
       clientID: process.env.GOOGLE_CLIENT_ID || GOOGLE_OAUTH_PLACEHOLDER,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || GOOGLE_OAUTH_PLACEHOLDER,
+      clientSecret:
+        process.env.GOOGLE_CLIENT_SECRET || GOOGLE_OAUTH_PLACEHOLDER,
       callbackURL: googleOAuthCallbackUrl(),
     });
   }
